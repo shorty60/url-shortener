@@ -43,6 +43,17 @@ app.post('/', (req, res) => {
       isInDB = true
       res.render('index', { Origin: req.get('origin'), shortenID, isInDB })
     })
+    .catch(error => {
+      console.log(error)
+    })
+})
+
+app.get('/:shortenID', (req, res) => {
+  const shortenID = req.params.shortenID
+  Record.findOne({ shortenID })
+    .lean()
+    .then(data => res.redirect(data.originalUrl))
+    .catch(error => console.log(error))
 })
 
 app.listen(port, () => {
