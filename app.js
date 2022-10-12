@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const { engine } = require('express-handlebars')
+const { body, validationResult } = require('express-validator')
 
 const Record = require('./models/record')
 const shortenIdGenerator = require('./utilities/shortenIdGenerator')
@@ -31,29 +32,61 @@ app.get('/', (req, res) => {
   res.render('index')
 })
 
-app.post('/', (req, res) => {
-  const originalUrl = req.body.urlInput.trim()
-  const shortenID = shortenIdGenerator(originalUrl, 5)
-  let isInDB = false
-  Record.findOne({ $and: [{ shortenID }, { originalUrl }] })
-    .then(data => {
-      data ? data : Record.create({ shortenID, originalUrl })
-    })
-    .then(data => {
-      isInDB = true
-      res.render('index', { Origin: req.get('origin'), shortenID, isInDB })
-    })
-    .catch(error => {
-      console.log(error)
-    })
-})
+app.post(
+  '/',
+  // urlInput must be an url
+  body('urlInput').isURL(),
+  (req, res) => {
+    const originalUrl = req.body.urlInput.trim()
+    const shortenID = shortenIdGenerator(originalUrl, 5)
+    const Origin = req.get('origin')
+    let isInDB = false
+
+    const errors = validationResult(req)
+    // 如果驗證後有error，handle this error
+    if (!errors.isEmpty()) {
+      let badRequest = true
+      return res.status(400).render('error', {
+        errors: errors.array(),
+        Origin,
+        badRequest,
+      })
+    }
+
+    Record.findOne({ $and: [{ shortenID }, { originalUrl }] })
+      .then(data => {
+        data ? data : Record.create({ shortenID, originalUrl })
+      })
+      .then(data => {
+        isInDB = true
+        return res.render('index', {
+          Origin,
+          shortenID,
+          isInDB,
+        })
+      })
+      .catch(error => {
+        console.log(error)
+        return res.render('error')
+      })
+  }
+)
 
 app.get('/:shortenID', (req, res) => {
   const shortenID = req.params.shortenID
   Record.findOne({ shortenID })
     .lean()
-    .then(data => res.redirect(data.originalUrl))
-    .catch(error => console.log(error))
+    .then(data => {
+      if (!data) {
+        let notFound = true
+        return res.render('error', { notFound })
+      }
+      return res.redirect(data.originalUrl)
+    })
+    .catch(error => {
+      console.log(error)
+      return res.render('error')
+    })
 })
 
 app.listen(port, () => {
