@@ -1,10 +1,7 @@
 const express = require('express')
 
 const { engine } = require('express-handlebars')
-const { body, validationResult } = require('express-validator')
-
-const Record = require('./models/record')
-const shortenIdGenerator = require('./utilities/shortenIdGenerator')
+const routes = require('./routes')
 
 require('./config/mongoose')
 const app = express()
@@ -15,68 +12,8 @@ app.set('view engine', 'hbs')
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
-
-// router setting
-app.get('/', (req, res) => {
-  res.render('index')
-})
-
-app.post(
-  '/',
-  // urlInput must be an url
-  body('urlInput').isURL(),
-  (req, res) => {
-    const originalUrl = req.body.urlInput.trim()
-    const shortenID = shortenIdGenerator(originalUrl, 5)
-    const Origin = req.get('origin')
-    let isInDB = false
-
-    const errors = validationResult(req)
-    // 如果驗證後有error，handle this error
-    if (!errors.isEmpty()) {
-      let badRequest = true
-      return res.status(400).render('error', {
-        errors: errors.array(),
-        Origin,
-        badRequest,
-      })
-    }
-
-    Record.findOne({ $and: [{ shortenID }, { originalUrl }] })
-      .then(data => {
-        data ? data : Record.create({ shortenID, originalUrl })
-      })
-      .then(data => {
-        isInDB = true
-        return res.render('index', {
-          Origin,
-          shortenID,
-          isInDB,
-        })
-      })
-      .catch(error => {
-        console.log(error)
-        return res.render('error')
-      })
-  }
-)
-
-app.get('/:shortenID', (req, res) => {
-  const shortenID = req.params.shortenID
-  Record.findOne({ shortenID })
-    .lean()
-    .then(data => {
-      if (!data) {
-        let notFound = true
-        return res.render('error', { notFound })
-      }
-      return res.redirect(data.originalUrl)
-    })
-    .catch(error => {
-      console.log(error)
-      return res.render('error')
-    })
-})
+// 把處理好的request送到主路由器
+app.use(routes)
 
 app.listen(port, () => {
   console.log(`Express is listening on http://localhost:${port}`)

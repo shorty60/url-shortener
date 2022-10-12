@@ -1,3 +1,4 @@
+// 貼至記事本function
 function copyToClipboard() {
   // Get the text field
   const copyText = document.querySelector('#urlGenerated')
@@ -13,6 +14,7 @@ function copyToClipboard() {
   alert('URL Copied: ' + copyText.value)
 }
 
+// 前端表單驗證，阻擋不合規表單
 const urlInputForm = document.querySelector('#url-input-form')
 const submitButton = document.querySelector('#submit-button')
 
