@@ -18,7 +18,7 @@
             <h4>Success! Please use this link:</h4>
             <div class='mb-2'>
               <input
-                type='text'
+                type='url'
                 class='form-control bg-light'
                 id='urlGenerated'
                 value='{{Origin}}/{{shortenID}}'
@@ -37,7 +37,7 @@
           <form action='/' method='POST' id='url-input-form' novalidate>
             <div class='mb-3'>
               <input
-                type='text'
+                type='url'
                 class='form-control bg-light'
                 name='urlInput'
                 id='url-input'
@@ -45,6 +45,12 @@
                 aria-describedby='urlPasted'
                 required
               />
+              <div class='valid-feedback'>
+                Looks good!
+              </div>
+              <div class='invalid-feedback'>
+                請輸入url
+              </div>
 
             </div>
             <div class='d-flex justify-content-center'>
@@ -62,4 +68,4 @@
   </div>
 </main>
 
-<script src="/javascripts/main.js"></script>
+<script src='/javascripts/main.js'></script>
