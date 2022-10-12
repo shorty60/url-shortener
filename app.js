@@ -1,25 +1,14 @@
 const express = require('express')
-const mongoose = require('mongoose')
+
 const { engine } = require('express-handlebars')
 const { body, validationResult } = require('express-validator')
 
 const Record = require('./models/record')
 const shortenIdGenerator = require('./utilities/shortenIdGenerator')
 
+require('./config/mongoose')
 const app = express()
 const port = 3000
-
-mongoose.connect(process.env.MONGODB_URI)
-
-const db = mongoose.connection
-
-db.on('error', () => {
-  console.log('MongoDB connection failed.')
-})
-
-db.once('open', () => {
-  console.log('MongoDB connected.')
-})
 
 app.engine('hbs', engine({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
