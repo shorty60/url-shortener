@@ -41,7 +41,7 @@ git clone https://github.com/shorty60/url-shortener.git
 2.Change directory to project folder
 
 ```
-cd url_shortener
+cd url-shortener
 ```
 
 3.Install npm packages
