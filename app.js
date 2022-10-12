@@ -1,8 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const { engine } = require('express-handlebars')
-const Record = require('./models/record')
 
+const Record = require('./models/record')
+const shortenIdGenerator = require('./utilities/shortenIdGenerator')
 
 const app = express()
 const port = 3000
@@ -27,10 +28,22 @@ app.use(express.static('public'))
 
 // router setting
 app.get('/', (req, res) => {
-  let isHomePage = true
-  res.render('index', { isHomePage })
+  res.render('index')
 })
 
+app.post('/', (req, res) => {
+  const originalUrl = req.body.urlInput.trim()
+  const shortenID = shortenIdGenerator(originalUrl, 5)
+  let isInDB = false
+  Record.findOne({ $and: [{ shortenID }, { originalUrl }] })
+    .then(data => {
+      data ? data : Record.create({ shortenID, originalUrl })
+    })
+    .then(data => {
+      isInDB = true
+      res.render('index', { Origin: req.get('origin'), shortenID, isInDB })
+    })
+})
 
 app.listen(port, () => {
   console.log(`Express is listening on http://localhost:${port}`)
