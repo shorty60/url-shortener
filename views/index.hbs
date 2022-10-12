@@ -1,1 +1,58 @@
-<h1>Hello world!</h1>
+<main>
+  <div class='container d-flex justify-content-center align-items-center'>
+    <div class='card align-items-center w-50' id='url-card'>
+      <h2 class='card-title mt-5'>URL Shortener</h2>
+      <div class='image mt-3 mb-5'>
+        <img
+          src='https://assets-lighthouse.alphacamp.co/uploads/image/file/16716/ExportedContentImage_00.png'
+          class='card-img-top'
+          alt='URL-shortener-icon'
+          style='max-width: 10rem;'
+        />
+      </div>
+
+      <div class='card-body'>
+        <form action='/' method='POST' id='url-input-form' novalidate>
+          <div class='mb-3'>
+            <input
+              type='text'
+              class='form-control bg-light'
+              name='urlInput'
+              id='url-input'
+              placeholder='Paste your URL here...'
+              aria-describedby='urlPasted'
+              required
+            />
+
+          </div>
+          <div class='d-flex justify-content-center'>
+            <button
+              id='submit-button'
+              class='btn btn-outline-primary btn-lg'
+              type='submit'
+            >Shorten</button>
+          </div>
+        </form>
+
+        <div>
+          <h4>Success! Please use this link:</h4>
+          <div class='mb-2'>
+            <input
+              type='text'
+              class='form-control bg-light'
+              id='urlGenerated'
+            />
+          </div>
+          <div class='d-flex justify-content-center'>
+            <button
+              id='copy-button'
+              class='btn btn-primary btn-lg'
+              type='button'
+            >Copy</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>

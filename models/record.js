@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const recordSchema = new Schema({
-  url: {
+  originalUrl: {
     type: String,
     require: true,
   },
 })
 
-module.export = mongoose.model('Record', recordSchema)
+module.exports = mongoose.model('Record', recordSchema)

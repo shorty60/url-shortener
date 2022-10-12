@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const { engine } = require('express-handlebars')
 const Record = require('./models/record')
 
+
 const app = express()
 const port = 3000
 
@@ -21,10 +22,15 @@ db.once('open', () => {
 app.engine('hbs', engine({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public'))
+
 // router setting
 app.get('/', (req, res) => {
-  res.render('index')
+  let isHomePage = true
+  res.render('index', { isHomePage })
 })
+
 
 app.listen(port, () => {
   console.log(`Express is listening on http://localhost:${port}`)
