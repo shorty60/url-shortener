@@ -23,3 +23,10 @@ body {
   padding: 0.5rem 2rem 0.5rem 2rem;
   border-radius: 0%;
 }
+
+#back-button {
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  margin-left: 1rem;
+  border-radius: 0%;
+  opacity: 80%;
+}

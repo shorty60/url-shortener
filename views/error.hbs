@@ -11,9 +11,13 @@
     {{/if}}
 
     {{#if badRequest}}
+
       <h3>Bad Request!</h3>
-      <p>errors</p>
+      <p>Your input is: <strong>{{error.value}}</strong></p>
+      <p>Reason: {{error.msg}}, you must sent an URL.</p>
+
       <a class='btn btn-secondary btn-lg' href='{{Origin}}'>Go Back</a>
+
     {{/if}}
 
   </div>

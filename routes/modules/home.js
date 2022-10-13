@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 
 // client送出URL，提交表單給root
 router.post(
-  '/',
+  '/shortenUrls',
   // urlInput must be an url
   body('urlInput').isURL(),
   (req, res) => {
@@ -27,7 +27,7 @@ router.post(
     if (!errors.isEmpty()) {
       let badRequest = true
       return res.status(400).render('error', {
-        errors: errors.array(),
+        error: errors.array()[0],
         Origin,
         badRequest,
       })
@@ -35,7 +35,10 @@ router.post(
 
     Record.findOne({ $and: [{ shortenID }, { originalUrl }] })
       .then(data => {
-        data ? data : Record.create({ shortenID, originalUrl })
+        if (data) {
+          return data
+        }
+        return Record.create({ shortenID, originalUrl })
       })
       .then(data => {
         isInDB = true
